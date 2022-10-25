@@ -79,7 +79,9 @@ public class PixelPropsUtils {
             "com.google.android.apps.youtube.kids",
             "com.google.android.apps.youtube.music",
             "com.google.android.apps.recorder",
-            "com.google.android.apps.wearables.maestro.companion"
+            "com.google.android.apps.wearables.maestro.companion",
+            "com.google.android.euicc",
+            "com.google.euiccpixel"
     };
 
     // Codenames for currently supported Pixels by Google
