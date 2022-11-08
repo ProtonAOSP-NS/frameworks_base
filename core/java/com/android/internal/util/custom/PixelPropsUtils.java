@@ -19,7 +19,6 @@ package com.android.internal.util.custom;
 
 import android.app.Application;
 import android.os.Build;
-import android.os.SystemProperties;
 import android.util.Log;
 
 import java.lang.reflect.Field;
@@ -32,7 +31,6 @@ import java.util.Map;
 public class PixelPropsUtils {
 
     private static final String TAG = PixelPropsUtils.class.getSimpleName();
-    private static final String DEVICE = "org.pixelexperience.device";
     private static final boolean DEBUG = false;
 
     private static final String SAMSUNG = "com.samsung.android.";
@@ -84,21 +82,6 @@ public class PixelPropsUtils {
             "com.google.euiccpixel"
     };
 
-    // Codenames for currently supported Pixels by Google
-    private static final String[] pixelCodenames = {
-            "cheetah",
-            "panther",
-            "bluejay",
-            "oriole",
-            "raven",
-            "barbet",
-            "redfin",
-            "bramble",
-            "sunfish",
-            "coral",
-            "flame"
-    };
-
     private static volatile boolean sIsGms = false;
     private static volatile boolean sIsFinsky = false;
 
@@ -140,14 +123,12 @@ public class PixelPropsUtils {
                 || packageName.startsWith(SAMSUNG)
                 || Arrays.asList(extraPackagesToChange).contains(packageName)) {
 
-            boolean isPixelDevice = Arrays.asList(pixelCodenames).contains(SystemProperties.get(DEVICE));
-
             if (packageName.equals("com.google.android.apps.photos")) {
                 propsToChange.putAll(propsToChangePixelXL);
             } else if (packageName.equals("com.android.vending")) {
                 sIsFinsky = true;
                 return;
-            } else if (!isPixelDevice) {
+            } else {
                 if ((Arrays.asList(packagesToChangePixel7Pro).contains(packageName))
                         || packageName.startsWith(SAMSUNG)
                         || Arrays.asList(extraPackagesToChange).contains(packageName)) {
