@@ -23,6 +23,9 @@ import android.content.Context
 import android.graphics.Point
 import android.hardware.biometrics.BiometricFingerprintConstants
 import android.hardware.biometrics.BiometricSourceType
+import android.os.UserHandle
+import android.provider.Settings
+import android.util.Log
 import androidx.annotation.VisibleForTesting
 import com.android.keyguard.KeyguardUpdateMonitor
 import com.android.keyguard.KeyguardUpdateMonitorCallback
@@ -179,11 +182,17 @@ class AuthRippleController @Inject constructor(
     override fun onKeyguardFadingAwayChanged() {
         if (keyguardStateController.isKeyguardFadingAway) {
             val lightRevealScrim = centralSurfaces.lightRevealScrim
+
+            val disableRipple = Settings.System.getIntForUser(
+                context.contentResolver,
+                Settings.System.DISABLE_FINGERPRINT_ANIMATION, 0,
+                UserHandle.USER_CURRENT) == 1
+
             if (startLightRevealScrimOnKeyguardFadingAway && lightRevealScrim != null) {
                 lightRevealScrimAnimator?.cancel()
                 lightRevealScrimAnimator = ValueAnimator.ofFloat(.1f, 1f).apply {
                     interpolator = Interpolators.LINEAR_OUT_SLOW_IN
-                    duration = RIPPLE_ANIMATION_DURATION
+                    duration = if(disableRipple) 0 else RIPPLE_ANIMATION_DURATION
                     startDelay = keyguardStateController.keyguardFadingAwayDelay
                     addUpdateListener { animator ->
                         if (lightRevealScrim.revealEffect != circleReveal) {
